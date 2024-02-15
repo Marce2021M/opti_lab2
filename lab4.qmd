@@ -84,3 +84,10 @@ for i in range(len(xstar)) :
     print(f"y[{i}] = ", ystar[i])
 ```
 
+```{python}
+verror = xstar - ystar
+error = np.linalg.norm(verror)
+
+print("Norma del Error = ", error)
+```
+
