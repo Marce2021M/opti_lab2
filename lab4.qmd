@@ -1,0 +1,70 @@
+---
+title: "OPTI-  Lab 2"
+lang: es
+author: 
+  - Marcelino Sánchez Rodríguez 191654
+date: today
+format:
+  pdf:
+    latex_engine: xelatex
+---
+# Definimos función
+```{python}
+import numpy as np
+
+def mi_esp_nulo(Q, A, c, b) :
+
+    #—————————————————-
+    # M ́etodo del espacio nulo para el problema cuadr ́atico convexo
+    # Min (1/2) ∗ x.T ∗ Q ∗ x + c.T ∗ x
+    # s. a A ∗ x = b
+    #—————————————————–
+    (m, n) = np.shape(A)
+    #——————————————————
+    # Descomposici ́on en valores singulares
+    (U, S, Vh) = np.linalg.svd(A, full_matrices = True)
+    V = Vh.T
+    V1 = V[:, 0 : m]
+    #——Base del espacio nulo————————–
+    Z = V [:, m : n]
+    #—————————————————–
+    # Soluci ́on Particular / A ∗ xpar = b
+    xpar = np.dot(U.T, b)
+    Sinv = 1/S
+    xpar = Sinv * xpar
+    xpar = np.dot(V1, xpar)
+    #—————————————————–
+    # matriz del problema cuadr ́atico convexo sin restricciones
+    QZ = np.dot(Z.T, Q)
+    QZ = np.dot(QZ, Z)
+    #——————————————————
+    # Lado derecho
+    ld = np.dot(Q, xpar) + c
+    ld = -np.dot(Z.T, ld)
+    #———soluci ́on del problema cuadr ́atico sin restricciones
+    xz = np.linalg.solve(QZ, ld)
+    #——————————————————–
+    # Soluci ́on del problema original
+    xstar = xpar + np.dot(Z, xz)
+    return xstar
+```
+
+# Ejemplo
+```{python}
+import numpy as np
+m = 5
+n = 9
+A = np.random.randn(5, 9)
+b = np.ones(m)
+c = 10 * np.random.rand(n)
+vd = np.arange(1, n + 1)
+Q = np.diag(vd)
+#
+xstar = mi_esp_nulo(Q, A, c, b)
+#
+print("Soluci ́on del problema cuadr ́atico ——–")
+for i in range(len(xstar)) :
+    print(f"x[{i}] = ", xstar[i])
+
+```
+
