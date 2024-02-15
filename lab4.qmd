@@ -68,3 +68,19 @@ for i in range(len(xstar)) :
 
 ```
 
+```{python}
+K= np.concatenate((Q,A.T),1)
+MC = np.zeros((m,m))
+K1= np.concatenate((A,MC),1)
+K2= np.concatenate((K,K1),0)
+
+f = np.concatenate((-c,b),0)
+
+w = np.linalg.solve(K2,f)
+
+ystar = w[0:n]
+
+for i in range(len(xstar)) :
+    print(f"y[{i}] = ", ystar[i])
+```
+
